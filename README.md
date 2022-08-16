@@ -1,3 +1,7 @@
+# Udemy NextJs Course: Project 1
+Project 1 of the Next.js &amp; React - The Complete Guide Tutorial
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
