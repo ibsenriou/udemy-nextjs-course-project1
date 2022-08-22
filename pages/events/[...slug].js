@@ -9,6 +9,7 @@ import ResultsTitle from '../../components/events/results-title';
 import EventList from '../../components/events/EventList';
 import Button from '../../components/ui/Button';
 import ErrorAlert from '../../components/ui/error-alert';
+import Head from 'next/head';
 
 const FilteredEventsPage = () => {
   const [loadedEvents, setLoadedEvents] = useState();
@@ -17,10 +18,10 @@ const FilteredEventsPage = () => {
   const filterData = router.query.slug;
 
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error } = useSWR('https://netxjs-the-complete-guide-default-rtdb.firebaseio.com/events.json', fetcher);
-
-
-
+  const { data, error } = useSWR(
+    'https://netxjs-the-complete-guide-default-rtdb.firebaseio.com/events.json',
+    fetcher
+  );
 
   useEffect(() => {
     if (data) {
@@ -34,13 +35,28 @@ const FilteredEventsPage = () => {
       }
 
       setLoadedEvents(events);
-      console.log(data)
-      console.log(events)
+      console.log(data);
+      console.log(events);
     }
   }, [data]);
 
+  let pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`A list of filtered events.`}
+      />
+    </Head>
+  );
+
   if (!loadedEvents) {
-    return <p className="center">Loading</p>;
+    return (
+      <Fragment>
+        {pageHeadData}
+        <p className="center">Loading</p>;
+      </Fragment>
+    );
   }
 
   const filteredYear = filterData[0];
@@ -48,6 +64,16 @@ const FilteredEventsPage = () => {
 
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
+
+  pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`All events for ${numMonth}/${numYear}`}
+      />
+    </Head>
+  );
 
   if (
     isNaN(numYear) ||
@@ -60,6 +86,7 @@ const FilteredEventsPage = () => {
   ) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p className="center">Invalid Filter. Please Adjust Your Values...</p>
         </ErrorAlert>
@@ -81,6 +108,7 @@ const FilteredEventsPage = () => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p className="center">No events found for the chosen filter.</p>
         </ErrorAlert>
@@ -95,6 +123,7 @@ const FilteredEventsPage = () => {
 
   return (
     <Fragment>
+      {pageHeadData}
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </Fragment>
